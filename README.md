@@ -7,11 +7,9 @@
   <img src="https://img.shields.io/badge/made_by-Alex_Almeida-0d1117?style=flat&logo=terminal&logoColor=58a6ff&labelColor=21262d">
 </p>
 
-# rag-codebase
+# RAG Codebase
 
 Web chat interface with RAG for codebase analysis, integrating semantic search ([cocoindex-code](https://github.com/cocoindex-io/cocoindex-code)) with Claude (Anthropic) via API.
-
----
 
 ## Purpose
 
@@ -23,8 +21,6 @@ Enable Dev, QA, PO, and Support teams to ask natural language questions about so
 - QA:      *"Which tables are affected by this flow?"*
 - PO:      *"Which modules use this entity?"*
 - Support: *"What does this warning/error mean?"*
-
----
 
 ## Features
 
@@ -39,8 +35,6 @@ Enable Dev, QA, PO, and Support teams to ask natural language questions about so
 - Containerized with Docker for server deployment
 - Question classifier (simple, complex, irrelevant) with automatic model selection (Sonnet or Opus)
 - Search, select, and add a file as context (one at a time)
-
----
 
 ## Architecture
 
@@ -86,8 +80,6 @@ indexing_params:
 
 > The similarity threshold `MIN_SCORE_THRESHOLD = 0.40` and the proportional chunk selection percentages (`CHUNK_SELECTION_TIERS`) defined in `main.py` were tuned based on the scores produced by this model. Changing the embeddings model requires recalibrating these parameters.
 
----
-
 ## How It Works - Model Routing
 
 Before calling the main Claude model, the backend traverses a decision tree to select the most appropriate model and avoid unnecessary API calls. The goal is to minimize token cost without compromising response quality.
@@ -128,8 +120,6 @@ Invoked only when relevant sources exist and no keyword/trigger was matched. Cla
 - **`ROUTE_SKIP`**
 When Haiku returns `irrelevant` (outside the code/system context), the default response is emitted directly via SSE, no call to the main Claude model is made and the chunk tokens are never sent.
 
----
-
 ## Tech Stack
 
 | Layer | Technology |
@@ -143,8 +133,6 @@ When Haiku returns `irrelevant` (outside the code/system context), the default r
 | LLM | Anthropic API - Claude Sonnet 4.6 (1M Context) |
 | Streaming | Server-Sent Events (SSE) |
 | Containerization | Docker + Docker Compose |
-
----
 
 ## Project Structure
 
@@ -160,8 +148,6 @@ rag-codebase/
 ├── docker-compose.yml
 └── .env.example             # required environment variables
 ```
-
----
 
 ## Configuration
 
@@ -188,8 +174,6 @@ Available repositories and branches are configured in [config.yml](/app/config.y
 
 > The update policy (`git pull`) and reindexing (`ccc index`) of repositories is managed by external automated schedules, outside this project.
 
----
-
 ## Running Locally (WSL/Ubuntu)
 
 ### Prerequisites
@@ -215,8 +199,6 @@ uv run uvicorn app.main:app --reload --port 8000
 
 Access at `http://localhost:8000`.
 
----
-
 ## Server Deployment (Docker)
 
 ```bash
@@ -232,8 +214,6 @@ docker compose down
 
 `docker-compose.yml` bind-mounts the clones directory into the container, parameterized via `.env`.
 
----
-
 ## Production Server Prerequisites
 
 - Docker and Docker Compose installed
@@ -241,14 +221,10 @@ docker compose down
 - `ANTHROPIC_API_KEY` set in `.env`
 - Port 8000 open (or configure a reverse proxy via Nginx/Caddy)
 
----
-
 ## Author
 
 **Alex Ferreira de Almeida**  
 Software Engineer  
-
----
 
 ## Disclaimer
 
@@ -257,15 +233,11 @@ The actual source code of the GSK is private and cannot be published due to inte
 
 This README exists solely to document the project’s existence, architecture, design principles, and authorship.
 
----
-
 ## License
 
 This project is licensed under the [MIT License](LICENSE).
 
 You are free to use, modify, and distribute this project for personal or commercial purposes, provided that the original authorship and license notice are preserved.
-
----
 
 ## Project Status
 
