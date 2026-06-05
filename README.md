@@ -143,9 +143,10 @@ rag-codebase/
 │   ├── config.yml           # repo/branch → local path mapping
 │   └── static/
 │       └── index.html       # React SPA via CDN (full UI)
-├── requirements.txt
 ├── Dockerfile
 ├── docker-compose.yml
+├── pyproject.toml
+├── uv.lock
 └── .env.example             # required environment variables
 ```
 
