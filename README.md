@@ -11,7 +11,10 @@
 
 Web chat interface with RAG for codebase analysis, integrating semantic search ([cocoindex-code](https://github.com/cocoindex-io/cocoindex-code)) with Claude (Anthropic) via API.
 
-## Purpose
+> ⚠️ This is the **official repository** of the RAG Codebase project.  
+> Beware of unofficial copies or modified versions that may contain unsafe files.
+
+## 📌 Purpose
 
 Enable Dev, QA, PO, and Support teams to ask natural language questions about source code, directly from the browser, without relying on IDEs or CLI tooling.
 
@@ -22,7 +25,7 @@ Enable Dev, QA, PO, and Support teams to ask natural language questions about so
 - PO:      *"Which modules use this entity?"*
 - Support: *"What does this warning/error mean?"*
 
-## Features
+## 🔑 Key Features
 
 - Session-aware chat (per-tab history in the browser)
 - Dynamic selection of repository, branch, and layers (back-end, front-end, and/or database)
@@ -36,7 +39,7 @@ Enable Dev, QA, PO, and Support teams to ask natural language questions about so
 - Question classifier (simple, complex, irrelevant) with automatic model selection (Sonnet or Opus)
 - Search, select, and add a file as context (one at a time)
 
-## Architecture
+## 🧩 Architecture
 
 ```
 Browser (HTML + React via CDN)
@@ -80,7 +83,7 @@ indexing_params:
 
 > The similarity threshold `MIN_SCORE_THRESHOLD = 0.40` and the proportional chunk selection percentages (`CHUNK_SELECTION_TIERS`) defined in `main.py` were tuned based on the scores produced by this model. Changing the embeddings model requires recalibrating these parameters.
 
-## How It Works - Model Routing
+## 🔶 How It Works - Model Routing
 
 Before calling the main Claude model, the backend traverses a decision tree to select the most appropriate model and avoid unnecessary API calls. The goal is to minimize token cost without compromising response quality.
 
@@ -150,7 +153,7 @@ rag-codebase/
 └── .env.example             # required environment variables
 ```
 
-## Configuration
+## 🔧 Configuration
 
 ### Environment Variables
 
@@ -200,7 +203,7 @@ uv run uvicorn app.main:app --reload --port 8000
 
 Access at `http://localhost:8000`.
 
-## Server Deployment (Docker)
+## 🚀 Server Deployment (Docker)
 
 ```bash
 # Build and run
@@ -222,25 +225,25 @@ docker compose down
 - `ANTHROPIC_API_KEY` set in `.env`
 - Port 8000 open (or configure a reverse proxy via Nginx/Caddy)
 
-## Author
+## 👤 Author
 
 **Alex Ferreira de Almeida**  
 Software Engineer  
 
-## Disclaimer
+## 📝 Disclaimer
 
 This repository contains **public documentation only**.  
 The actual source code of the GSK is private and cannot be published due to internal processes, proprietary integrations, and corporate security policies.
 
 This README exists solely to document the project’s existence, architecture, design principles, and authorship.
 
-## License
+## 📝 License
 
 This project is licensed under the [MIT License](LICENSE).
 
 You are free to use, modify, and distribute this project for personal or commercial purposes, provided that the original authorship and license notice are preserved.
 
-## Project Status
+## 📅 Project Status
 
 **Active - 2026 to Present**  
 Corporate internal tool currently used in production environments.
