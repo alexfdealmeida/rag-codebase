@@ -233,7 +233,7 @@ Software Engineer
 ## 📝 Disclaimer
 
 This repository contains **public documentation only**.  
-The actual source code of the GSK is private and cannot be published due to internal processes, proprietary integrations, and corporate security policies.
+The actual source code of the RAG Codebase is private and cannot be published due to internal processes, proprietary integrations, and corporate security policies.
 
 This README exists solely to document the project’s existence, architecture, design principles, and authorship.
 
