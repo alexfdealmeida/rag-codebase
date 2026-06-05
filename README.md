@@ -94,7 +94,7 @@ Before calling the main Claude model, the backend traverses a decision tree to s
 
 ### Decision Flow
 
-![Decision Flow](.github/assets/rag-codebase-flow-light.svg)
+![Decision Flow](https://raw.githubusercontent.com/alexfdealmeida/rag-codebase/main/.github/assets/rag-codebase-flow-light.svg)
 
 ### Route Summary Table
 
