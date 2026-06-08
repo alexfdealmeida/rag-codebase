@@ -1,4 +1,8 @@
 <p align="center">
+  <img src="docs/assets/gsk-logo.png" width="400">
+</p>
+
+<p align="center">
   <img src="https://img.shields.io/badge/Status-active-brightgreen">
   <img src="https://img.shields.io/badge/Source-private-lightgrey">
 </p>
@@ -89,7 +93,7 @@ Before calling the main Claude model, the backend traverses a decision tree to s
 
 ### Decision Flow
 
-![Decision Flow](https://raw.githubusercontent.com/alexfdealmeida/rag-codebase/main/.github/assets/rag-codebase-flow-light.svg)
+![Decision Flow](https://raw.githubusercontent.com/alexfdealmeida/rag-codebase/main/docs/assets/rag-codebase-flow-light.svg)
 
 ### Route Summary Table
 
