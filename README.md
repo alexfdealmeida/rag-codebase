@@ -83,7 +83,7 @@ indexing_params:
 
 > The similarity threshold `MIN_SCORE_THRESHOLD = 0.40` and the proportional chunk selection percentages (`CHUNK_SELECTION_TIERS`) defined in `main.py` were tuned based on the scores produced by this model. Changing the embeddings model requires recalibrating these parameters.
 
-## 🔶 How It Works - Model Routing
+## ⚙️ How It Works - Model Routing
 
 Before calling the main Claude model, the backend traverses a decision tree to select the most appropriate model and avoid unnecessary API calls. The goal is to minimize token cost without compromising response quality.
 
@@ -123,7 +123,7 @@ Invoked only when relevant sources exist and no keyword/trigger was matched. Cla
 - **`ROUTE_SKIP`**
 When Haiku returns `irrelevant` (outside the code/system context), the default response is emitted directly via SSE, no call to the main Claude model is made and the chunk tokens are never sent.
 
-## Tech Stack
+## 🛠️ Tech Stack
 
 | Layer | Technology |
 |---|---|
@@ -137,7 +137,7 @@ When Haiku returns `irrelevant` (outside the code/system context), the default r
 | Streaming | Server-Sent Events (SSE) |
 | Containerization | Docker + Docker Compose |
 
-## Project Structure
+## 📁 Project Structure
 
 ```
 rag-codebase/
@@ -178,7 +178,7 @@ Available repositories and branches are configured in [config.yml](/app/config.y
 
 > The update policy (`git pull`) and reindexing (`ccc index`) of repositories is managed by external automated schedules, outside this project.
 
-## Running Locally (WSL/Ubuntu)
+## 💻 Running Locally (WSL/Ubuntu)
 
 ### Prerequisites
 
@@ -218,7 +218,7 @@ docker compose down
 
 `docker-compose.yml` bind-mounts the clones directory into the container, parameterized via `.env`.
 
-## Production Server Prerequisites
+## 🖥️ Production Server Prerequisites
 
 - Docker and Docker Compose installed
 - Repository clones available on the server with `cocoindex-code` indexes already built
@@ -230,7 +230,7 @@ docker compose down
 **Alex Ferreira de Almeida**  
 Software Engineer  
 
-## 📝 Disclaimer
+## 🔒 Disclaimer
 
 This repository contains **public documentation only**.  
 The actual source code of the RAG Codebase is private and cannot be published due to internal processes, proprietary integrations, and corporate security policies.
@@ -246,4 +246,3 @@ You are free to use, modify, and distribute this project for personal or commerc
 ## 📅 Project Status
 
 **Active - 2026 to Present**  
-Corporate internal tool currently used in production environments.
