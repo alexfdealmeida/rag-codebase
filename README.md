@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="docs/assets/ragcodebase-logo.png" width="400">
+  <img src="docs/assets/rag-codebase-logo.png" width="400">
 </p>
 
 <p align="center">
