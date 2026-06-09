@@ -72,21 +72,6 @@ Browser (HTML + React via CDN)
 - Message history is stored in server memory, keyed by `session_id`
 - When switching repository or branch, a confirmation modal is displayed and the session history is discarded
 
-### Embeddings Model
-
-This project is calibrated for the following `cocoindex-code` global configuration (`~/.cocoindex_code/global_settings.yml`):
-
-```yaml
-model: nomic-ai/CodeRankEmbed  # trained specifically for source code
-device: cuda                   # if omitted, auto-detected (CPU as fallback)
-query_params:
-    prompt_name: query
-indexing_params:
-    prompt_name: document
-```
-
-> The similarity threshold `MIN_SCORE_THRESHOLD = 0.40` and the proportional chunk selection percentages (`CHUNK_SELECTION_TIERS`) defined in `main.py` were tuned based on the scores produced by this model. Changing the embeddings model requires recalibrating these parameters.
-
 ## ⚙️ How It Works - Model Routing
 
 Before calling the main Claude model, the backend traverses a decision tree to select the most appropriate model and avoid unnecessary API calls. The goal is to minimize token cost without compromising response quality.
@@ -157,6 +142,35 @@ rag-codebase/
 └── .env.example             # required environment variables
 ```
 
+## 📦 Dependencies
+
+External dependencies required before executing the project.
+
+### Python
+```bash
+sudo apt update
+sudo apt install python3 python3-pip pipx
+```
+
+### cocoindex-code
+```bash
+pipx install 'cocoindex-code[full]==0.2.34'
+```
+
+### Embeddings Model
+
+File `~/.cocoindex_code/global_settings.yml`:
+```yaml
+model: nomic-ai/CodeRankEmbed  # trained specifically for source code
+device: cuda                   # if omitted, auto-detected (CPU as fallback)
+query_params:
+    prompt_name: query
+indexing_params:
+    prompt_name: document
+```
+
+> The similarity threshold `MIN_SCORE_THRESHOLD = 0.40` and the proportional chunk selection percentages (`CHUNK_SELECTION_TIERS`) defined in `main.py` were tuned based on the scores produced by this model. Changing the embeddings model requires recalibrating these parameters.
+
 ## 🔧 Configuration
 
 ### Environment Variables
@@ -186,7 +200,9 @@ Available repositories and branches are configured in [config.yml](/app/config.y
 
 ### Prerequisites
 
-- Python 3.11+
+- Python 3.11+ (`python3 --version`)
+  - uv (`uv --version`)
+  > To install `uv`, you must run the command `curl -LsSf https://astral.sh/uv/install.sh | sh` and reload the terminal session.
 - `cocoindex-code` installed via pipx (`ccc` available on PATH)
 - Indexes already built in the clones (`ccc index` run in each path)
 - `ANTHROPIC_API_KEY` and `CODEBASE_ROOT` set in `.env`
