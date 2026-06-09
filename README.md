@@ -189,6 +189,7 @@ Available repositories and branches are configured in [config.yml](/app/config.y
 - Python 3.11+
 - `cocoindex-code` installed via pipx (`ccc` available on PATH)
 - Indexes already built in the clones (`ccc index` run in each path)
+- `ANTHROPIC_API_KEY` and `CODEBASE_ROOT` set in `.env`
 
 ### Setup and Execution
 
@@ -207,7 +208,17 @@ uv run uvicorn app.main:app --reload --port 8000
 
 Access at `http://localhost:8000`.
 
-## 🚀 Server Deployment (Docker)
+## 🚀 Production Server Deployment (Docker)
+
+### Prerequisites
+
+- Docker and Docker Compose installed
+- Repository clones available on the server with `cocoindex-code` indexes already built
+- `ANTHROPIC_API_KEY`, `CODEBASE_ROOT` and `CODEBASE_HOST_PATH` set in `.env`
+  > `docker-compose.yml` bind-mounts the clones directory into the container.
+- Port 8000 open (or configure a reverse proxy via Nginx/Caddy)
+
+### Commands
 
 ```bash
 # Build and run
@@ -219,15 +230,6 @@ docker compose logs -f
 # Stop
 docker compose down
 ```
-
-`docker-compose.yml` bind-mounts the clones directory into the container, parameterized via `.env`.
-
-## 🖥️ Production Server Prerequisites
-
-- Docker and Docker Compose installed
-- Repository clones available on the server with `cocoindex-code` indexes already built
-- `ANTHROPIC_API_KEY` set in `.env`
-- Port 8000 open (or configure a reverse proxy via Nginx/Caddy)
 
 ## 👤 Author
 
