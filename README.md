@@ -183,6 +183,14 @@ indexing_params:
 
 ## 🔧 Configuration
 
+### Clone
+
+```bash
+# Clone the repository and set up the [git-hooks] submodule
+git clone https://dev.azure.com/grupo-siagri/ia/_git/rag-codebase
+cd rag-codebase && chmod +x getting-started.sh && ./getting-started.sh
+```
+
 ### Environment Variables
 
 Copy `.env.example` to `.env` and fill in:
@@ -200,6 +208,8 @@ CODEBASE_ROOT=/codebase
 CODEBASE_HOST_PATH=/opt/rag/codebase
 ```
 
+> `docker-compose.yml` bind-mounts `CODEBASE_HOST_PATH` directory into `CODEBASE_ROOT`.
+
 ### Repository Mapping
 
 Available repositories and branches are configured in [config.yml](/app/config.yml). Each repository/branch combination corresponds to an independent Git clone with its own `cocoindex-code` index.
@@ -213,17 +223,10 @@ Available repositories and branches are configured in [config.yml](/app/config.y
 - Python 3.11+ (`python3 --version`)
   - uv (`uv --version`)
   > To install `uv`, you must run the command: `curl -LsSf https://astral.sh/uv/install.sh | sh`.
-- `cocoindex-code` installed via pipx (`ccc` available on PATH)
-- Indexes already built in the clones (`ccc index` run in each path)
-- `ANTHROPIC_API_KEY` and `CODEBASE_ROOT` set in `.env`
 
-### Setup and Execution
+### Commands
 
 ```bash
-# Clone the repository and set up the git-hooks submodule
-git clone https://dev.azure.com/grupo-siagri/ia/_git/rag-codebase
-cd rag-codebase && chmod +x getting-started.sh && ./getting-started.sh
-
 # Start the server
 uv run uvicorn app.main:app --reload --port 8000
 ```
@@ -234,10 +237,7 @@ Access at `http://localhost:8000`.
 
 ### Prerequisites
 
-- Docker and Docker Compose installed
-- Repository clones available on the server with `cocoindex-code` indexes already built
-- `ANTHROPIC_API_KEY`, `CODEBASE_ROOT` and `CODEBASE_HOST_PATH` set in `.env`
-  > `docker-compose.yml` bind-mounts the clones directory into the container.
+- Docker (`docker --version`) and Docker Compose (`docker compose version`) installed
 - Port 8000 open (or configure a reverse proxy via Nginx/Caddy)
 
 ### Commands
@@ -252,6 +252,8 @@ docker compose logs -f
 # Stop
 docker compose down
 ```
+
+Access at `http://server:8000`.
 
 ## 👤 Author
 
