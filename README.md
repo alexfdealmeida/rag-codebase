@@ -154,7 +154,17 @@ sudo apt install python3 python3-pip pipx
 
 ### cocoindex-code
 ```bash
+# Install cocoindex-code
 pipx install 'cocoindex-code[full]==0.2.34'
+
+# Create the '~/.cocoindex_code/global_settings.yml' configuration file
+ccc init
+
+# Reset local settings
+ccc reset --all
+
+# Run diagnostics
+ccc doctor
 ```
 
 ### Embeddings Model
@@ -202,7 +212,7 @@ Available repositories and branches are configured in [config.yml](/app/config.y
 
 - Python 3.11+ (`python3 --version`)
   - uv (`uv --version`)
-  > To install `uv`, you must run the command `curl -LsSf https://astral.sh/uv/install.sh | sh` and reload the terminal session.
+  > To install `uv`, you must run the command: `curl -LsSf https://astral.sh/uv/install.sh | sh`.
 - `cocoindex-code` installed via pipx (`ccc` available on PATH)
 - Indexes already built in the clones (`ccc index` run in each path)
 - `ANTHROPIC_API_KEY` and `CODEBASE_ROOT` set in `.env`
@@ -213,10 +223,6 @@ Available repositories and branches are configured in [config.yml](/app/config.y
 # Clone the repository and set up the git-hooks submodule
 git clone https://dev.azure.com/grupo-siagri/ia/_git/rag-codebase
 cd rag-codebase && chmod +x getting-started.sh && ./getting-started.sh
-
-# Configure environment variables
-cp .env.example .env
-# Edit .env (according to your environment - development or production)
 
 # Start the server
 uv run uvicorn app.main:app --reload --port 8000
