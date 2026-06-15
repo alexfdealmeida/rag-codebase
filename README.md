@@ -61,7 +61,7 @@ Browser (HTML + React via CDN)
         │
         ├─ builds prompt with chunks as context
         │
-        └─ Anthropic API (claude-sonnet-4-6, 1M Context)
+        └─ Anthropic API (Claude)
                 ▼
         streaming response → SSE → browser
 ```
@@ -122,7 +122,7 @@ When Haiku returns `irrelevant` (outside the code/system context), the default r
 | Markdown | marked.js via CDN |
 | Syntax highlighting | highlight.js via CDN |
 | Semantic search | cocoindex-code (`ccc search`) |
-| LLM | Anthropic API - Claude Sonnet 4.6 (1M Context) |
+| LLM | Anthropic API - Claude (Haiku, Sonnet and Opus) |
 | Streaming | Server-Sent Events (SSE) |
 | Containerization | Docker + Docker Compose |
 
