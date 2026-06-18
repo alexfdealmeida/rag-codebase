@@ -179,7 +179,7 @@ indexing_params:
     prompt_name: document
 ```
 
-> If indexing fails with `MDB_MAP_FULL: Environment mapsize limit reached`, increase the LMDB map size via the `COCOINDEX_LMDB_MAP_SIZE` environment variable. The value must be a multiple of the system page size (using multiples of 1 MiB is always safe). Examples: 10 GiB (`10737418240`), 20 GiB (`21474836480`), 30 GiB (`32212254720`).
+> If indexing fails with `MDB_MAP_FULL: Environment mapsize limit reached`, increase the LMDB map size via the `envs: COCOINDEX_LMDB_MAP_SIZE: "size_in_bytes"` environment variable. The value must be a multiple of the system page size (using multiples of 1 MiB is always safe). Examples: 10 GiB (`10737418240`), 20 GiB (`21474836480`), 30 GiB (`32212254720`).
 
 > The similarity threshold `MIN_SCORE_THRESHOLD = 0.40` and the proportional chunk selection percentages (`CHUNK_SELECTION_TIERS`) defined in `main.py` were tuned based on the scores produced by this model. Changing the embeddings model requires recalibrating these parameters.
 
