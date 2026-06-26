@@ -41,21 +41,30 @@ Enable Dev, QA, PO, and Support teams to ask natural language questions about so
 - Active context badge visible throughout the session
 - Containerized with Docker for server deployment
 - Question classifier (simple, complex, irrelevant) with automatic model selection (Sonnet or Opus)
+- Hybrid search: semantic (ccc search) + exact (git grep) for method names, class names, and string literals.
 - Search, select, and add a file as context (one at a time)
+- Automatic index warmup when selecting or switching contexts (repository/branch)
 
 ## 🧩 Architecture
 
 ```
 Browser (HTML + React via CDN)
         │
+        │  POST /warmup    (when selecting or switching repositories/branches)
         │  POST /chat      (query + session_id + repo + branch)
         │  GET  /stream    (SSE - token streaming)
         ▼
    FastAPI (Python)
         │
-        ├─ subprocess: ccc search "<query>" (cwd = clone path)
+        ├─ /warmup: ccc daemon stop (previous project) → ccc search dummy
+        │           (forces the index to be loaded into GPU memory before 1st query)
+        │
+        ├─ busca híbrida por pergunta:
+        │   ├─ ccc search "<query>"        → semantic search (similarity-based)
+        │   └─ git grep + ccc search --path → exact search (method names,
+        │                                      class names, and string literals)
         │       ▼
-        │  cocoindex-code (local semantic index)
+        │  score-based merge (git grep: score proportional to the number of occurrences)
         │       ▼
         │  relevant chunks (file, excerpt, score)
         │
@@ -71,6 +80,31 @@ Browser (HTML + React via CDN)
 - A `session_id` is generated on page load and persisted per browser tab
 - Message history is stored in server memory, keyed by `session_id`
 - When switching repository or branch, a confirmation modal is displayed and the session history is discarded
+
+### Hybrid Search
+
+The search combines two complementary mechanisms to maximize the relevance of the chunks returned to Claude.
+
+**Semantic search** (`ccc search`)
+Finds code that is conceptually related to the query, even when it does not contain exact identifiers. This is ideal for natural language questions such as "where is the credit validation rule implemented?".
+
+**Exact search** (`git grep + ccc search --path`)
+Automatically triggered when the query contains method or class identifiers (CamelCase, snake_case, or s/g/i prefixes) or string literals enclosed in double quotes. It locates the exact file using `git grep -c` (occurrence count) and retrieves the corresponding AST chunk with `ccc search --path`.
+
+> Exact-match chunks are ranked proportionally to the number of occurrences of the searched term within each file (Term Frequency). Files with more occurrences receive higher scores, ensuring that the most relevant file appears at the top of the merged results.
+
+**Usage tips:**
+- To locate a specific method, include its exact name in the query: *"Review the `sMakeIntegrarPedidoAprovadoNaoIntegrado` method"*.
+- To locate the source of an error message, enclose the text in double quotes: *I'm getting the error `"Customer does not have sufficient credit limit"`*.
+
+### Context Warmup
+
+When selecting or switching repositories/branches, RAGCodebase automatically performs a warmup cycle before enabling user input:
+
+- 1. **Stop the daemon** (if `DAEMON_STOP_ON_CONTEXT_SWITCH=true`): releases the VRAM allocated to the previous project.
+- 2. **Warmup search**: executes a dummy query (`__RAG_CODEBASE_SEEK_WARMUP_CCC_DAEMON__`) to force the daemon to load the new project's index into GPU memory.
+
+> This eliminates the latency of the first real query, which would otherwise occur while the daemon loads the model during request processing.
 
 ## ⚙️ How It Works - Model Routing
 
@@ -104,7 +138,7 @@ A keyword list evaluated locally (no API cost). If the question matches any keyw
 A list of expressions indicating questions about the assistant itself. When detected, `ccc search` is skipped entirely (no relevant code to retrieve).
 
 - **ccc search + threshold**
-Executes semantic search against the local index. Chunks with a score below `MIN_SCORE_THRESHOLD` (0.40) are discarded. If no chunks remain, Sonnet responds directly without invoking Haiku.
+Executes semantic search against the local index. Chunks with a score below `MIN_SCORE_THRESHOLD` (0.35) are discarded. If no chunks remain, Sonnet responds directly without invoking Haiku.
 
 - **Haiku (classifier)**
 Invoked only when relevant sources exist and no keyword/trigger was matched. Classifies the question as `complex`, `simple`, or `irrelevant` using `max_tokens=10` and `temperature=0.0`. The cost is minimal (~300–400 input tokens).
@@ -121,7 +155,7 @@ When Haiku returns `irrelevant` (outside the code/system context), the default r
 | Styling | Tailwind CSS via CDN |
 | Markdown | marked.js via CDN |
 | Syntax highlighting | highlight.js via CDN |
-| Semantic search | cocoindex-code (`ccc search`) |
+| Hybrid search | cocoindex-code (`ccc search`) + Git (`git grep`) |
 | LLM | Anthropic API - Claude (Haiku, Sonnet and Opus) |
 | Streaming | Server-Sent Events (SSE) |
 | Containerization | Docker + Docker Compose |
@@ -181,7 +215,7 @@ indexing_params:
 
 > If indexing fails with `MDB_MAP_FULL: Environment mapsize limit reached`, increase the LMDB map size via the `envs: COCOINDEX_LMDB_MAP_SIZE: "size_in_bytes"` environment variable. The value must be a multiple of the system page size (using multiples of 1 MiB is always safe). Examples: 10 GiB (`10737418240`), 20 GiB (`21474836480`), 30 GiB (`32212254720`).
 
-> The similarity threshold `MIN_SCORE_THRESHOLD = 0.40` and the proportional chunk selection percentages (`CHUNK_SELECTION_TIERS`) defined in `main.py` were tuned based on the scores produced by this model. Changing the embeddings model requires recalibrating these parameters.
+> The similarity threshold `MIN_SCORE_THRESHOLD` and the proportional chunk selection percentages (`CHUNK_SELECTION_TIERS`) defined in `main.py` were tuned based on the scores produced by this model. Changing the embeddings model requires recalibrating these parameters.
 
 ## 🔧 Configuration
 
@@ -201,6 +235,7 @@ Copy `.env.example` to `.env` and fill in:
 ```env
 ANTHROPIC_API_KEY=sk-ant-...
 CODEBASE_ROOT=/opt/rag/codebase
+DAEMON_STOP_ON_CONTEXT_SWITCH=true
 ```
 
 - With Docker (production):
@@ -211,6 +246,8 @@ CODEBASE_HOST_PATH=/opt/rag/codebase
 ```
 
 > `docker-compose.yml` bind-mounts `CODEBASE_HOST_PATH` directory into `CODEBASE_ROOT`.
+
+> `DAEMON_STOP_ON_CONTEXT_SWITCH`: When set to `true`, stops the `cocoindex-code` daemon whenever the repository or branch changes, immediately releasing the allocated VRAM. The daemon is automatically restarted during the next warmup. This setting is recommended for development environments with limited GPU resources, whether using `uv` or Docker (the stop and warmup operations affect only the container daemon, without impacting the host daemon responsible for indexing). In production environments with multiple users, leave this setting undefined or set it to `false`, as a context switch by one user would interrupt searches for all other users.
 
 ### Repository Mapping
 
