@@ -44,6 +44,11 @@ Definidas no `.env` (nunca commitado). Ver `.env.example` para referência:
 
 Mapeamento repo/branch → path local em `app/config.yml`.
 
+## Docs disponíveis
+
+- Use `.agents/docs/troubleshooting.md` para documentação sobre solução de problemas.
+- Use `.agents/docs/evaluation-questions.md` para perguntas de validação da qualidade do RAG.
+
 ## Skills disponíveis
 
 - Use `.agents/skills/add-trigger/SKILL.md` para adicionar palavras-chave em `COMPLEX_TRIGGERS` ou `ASSISTANT_TRIGGERS`

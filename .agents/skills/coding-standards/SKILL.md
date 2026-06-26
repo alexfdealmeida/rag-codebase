@@ -12,6 +12,7 @@ Ao escrever ou modificar código neste projeto, siga rigorosamente os padrões a
 - Nomes de funções e variáveis descritivos e autoexplicativos - evite abreviações
 - Funções e componentes pequenos, respeitando o Princípio da Responsabilidade Única (SRP)
 - Nenhum "magic number" solto - extrair em constantes nomeadas com nome descritivo
+- **Implementação minimalista** - ao modificar um arquivo, altere apenas o estritamente necessário. Não faça alterações de refactoring não necessárias (indentação, espaçamento, reordenação de imports, etc.)
 - Estrutura de arquivo dividida em seções comentadas:
   - Python: `# ============================================================\n# SECAO N: TITULO\n# ============================================================`
   - JavaScript/React: `// === COMPONENTE: NomeDoComponente ===`
