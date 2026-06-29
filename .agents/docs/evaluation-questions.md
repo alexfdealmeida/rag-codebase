@@ -3,19 +3,19 @@
 ## CloverCred
 
 - 1. Quais os atributos do Cadastro de empresa?
-chunks: 39
-min score: 44%
+chunks: 42
+min score: 43%
 max score: 53%
 model: sonnet-4-6
 
 - 2. Quais os impactos que podem acontecer ao alterar a classe Empresa.java?
-chunks: 39
-min score: 47%
+chunks: 33 (1 exact)
+min score: 46%
 max score: 53%
 model: opus-4-8
 
 - 3. O que você pode me dizer sobre Fluxo Rural?
-chunks: 39
+chunks: 42
 min score: 47%
 max score: 53%
 model: opus-4-8
@@ -45,3 +45,15 @@ chunks: 24 (1 exact)
 min score: 48%
 max score: 54%
 model: opus-4-8
+
+- 3. Quais os atributos do cadastro de empresa? (Empresa.java)
+chunks: 39 (1 exact)
+min score: 50%
+max score: 57%
+model: sonnet-4-6
+
+- 4. Quais os campos e tabelas utilizados na consulta qLoadNfEntrada?
+chunks: 36 (2 exact)
+min score: 43%
+max score: 48%
+model: sonnet-4-6

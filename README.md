@@ -59,10 +59,11 @@ Browser (HTML + React via CDN)
         ├─ /warmup: ccc daemon stop (previous project) → ccc search dummy
         │           (forces the index to be loaded into GPU memory before 1st query)
         │
-        ├─ busca híbrida por pergunta:
+        ├─ hybrid search per query:
         │   ├─ ccc search "<query>"        → semantic search (similarity-based)
-        │   └─ git grep + ccc search --path → exact search (method names,
-        │                                      class names, and string literals)
+        │   └─ exact search + ccc search --path → exact search for:
+        │       ├─ git ls-files (file names with extensions)
+        │       └─ git grep -wc (method names, class names, and string literals)
         │       ▼
         │  score-based merge (git grep: score proportional to the number of occurrences)
         │       ▼
@@ -89,13 +90,20 @@ The search combines two complementary mechanisms to maximize the relevance of th
 Finds code that is conceptually related to the query, even when it does not contain exact identifiers. This is ideal for natural language questions such as "where is the credit validation rule implemented?".
 
 **Exact search** (`git grep + ccc search --path`)
-Automatically triggered when the query contains method or class identifiers (CamelCase, snake_case, or s/g/i prefixes) or string literals enclosed in double quotes. It locates the exact file using `git grep -c` (occurrence count) and retrieves the corresponding AST chunk with `ccc search --path`.
+Automatically triggered when the query contains any of the following patterns:
+- **File names with supported extensions** recognized by cocoindex-code (e.g., `Empresa.java`, `EmpresaCadastroEditor.vue`)
+- **Identifiers** matching common method or class naming conventions: CamelCase, snake_case, or `s/g/i` prefix followed by an uppercase letter (e.g., `sMakeIntegrarPedido`, `ContainerEmpresa`)
+- **Double-quoted string literals** representing acronyms or fixed system messages (e.g., `"CFOP"`, `"Customer does not have sufficient credit limit"`)
 
 > Exact-match chunks are ranked proportionally to the number of occurrences of the searched term within each file (Term Frequency). Files with more occurrences receive higher scores, ensuring that the most relevant file appears at the top of the merged results.
 
 **Usage tips:**
-- To locate a specific method, include its exact name in the query: *"Review the `sMakeIntegrarPedidoAprovadoNaoIntegrado` method"*.
-- To locate the source of an error message, enclose the text in double quotes: *I'm getting the error `"Customer does not have sufficient credit limit"`*.
+- **File name with extension**: triggers `git ls-files` to locate the file by path and retrieve its chunks using the full query as the search input, maximizing the semantic relevance of the returned results: *"What are the attributes of `Empresa.java`?"* or *"Tell me about `EmpresaCadastroEditor.vue`."*
+- **Exact method or class name**: triggers `git grep -wc` to locate files containing the identifier:
+  *"Review the `sMakeIntegrarPedidoAprovadoNaoIntegrado` method."*
+- **Double-quoted message**: triggers `git grep -c` to locate the string literal in the codebase:
+  *"I'm getting the following error when trying to integrate an approved order: `"Customer does not have sufficient credit limit"`"*
+
 
 ### Context Warmup
 
