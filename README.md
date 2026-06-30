@@ -41,7 +41,7 @@ Enable Dev, QA, PO, and Support teams to ask natural language questions about so
 - Active context badge visible throughout the session
 - Containerized with Docker for server deployment
 - Question classifier (simple, complex, irrelevant) with automatic model selection (Sonnet or Opus)
-- Hybrid search: semantic (ccc search) + exact (git grep) for method names, class names, and string literals.
+- Hybrid search: semantic (cocoindex-code) + exact (Git) for file names, method names, class names, and string literals.
 - Search, select, and add a file as context (one at a time)
 - Automatic index warmup when selecting or switching contexts (repository/branch)
 
@@ -163,7 +163,7 @@ When Haiku returns `irrelevant` (outside the code/system context), the default r
 | Styling | Tailwind CSS via CDN |
 | Markdown | marked.js via CDN |
 | Syntax highlighting | highlight.js via CDN |
-| Hybrid search | cocoindex-code (`ccc search`) + Git (`git grep`) |
+| Hybrid search | cocoindex-code + Git |
 | LLM | Anthropic API - Claude (Haiku, Sonnet and Opus) |
 | Streaming | Server-Sent Events (SSE) |
 | Containerization | Docker + Docker Compose |
